@@ -26,7 +26,6 @@ export async function sendMail(data: MailData) {
       pass: SMTP_PASS,
     },
   });
-  const extractedBody = extractBodyContent(data.html);
   let response;
   let attach: any;
   let attachments: any = [];
