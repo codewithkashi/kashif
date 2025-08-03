@@ -21,7 +21,7 @@ const Experience = () => {
         "Leading comprehensive full-stack development initiatives spanning web, mobile, and DevOps domains. Architected and deployed high-availability infrastructure solutions while managing cross-functional development teams.",
       achievements: [
         "Managed a team of 12 developers across multiple projects",
-        "Successfully led 7 major projects from conception to deployment",
+        "Successfully led 10+ major projects from conception to deployment",
         "Built high-availability server infrastructure from scratch with zero downtime",
         "Implemented DNS failover and load balancing systems handling 10k users per minute",
         "Established comprehensive DevOps pipeline and deployment strategies",

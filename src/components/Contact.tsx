@@ -7,6 +7,9 @@ import { Input } from "@/src/components/ui/input";
 import { Textarea } from "@/src/components/ui/textarea";
 import { Badge } from "@/src/components/ui/badge";
 import { useToast } from "@/src/hooks/use-toast";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
 import {
   Mail,
   Phone,
@@ -18,7 +21,16 @@ import {
   MessageSquare,
   Zap,
   Instagram,
+  Loader2,
 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 const Contact = () => {
   const [ref, inView] = useInView({
@@ -27,39 +39,80 @@ const Contact = () => {
   });
 
   const { toast } = useToast();
-  const [formData, setFormData] = useState({
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Validation schema using Yup
+  const validationSchema = Yup.object({
+    name: Yup.string()
+      .min(2, "Name must be at least 2 characters")
+      .max(50, "Name must be less than 50 characters")
+      .required("Name is required"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    subject: Yup.string()
+      .min(5, "Subject must be at least 5 characters")
+      .max(100, "Subject must be less than 100 characters")
+      .required("Subject is required"),
+    message: Yup.string()
+      .min(10, "Message must be at least 10 characters")
+      .max(500, "Message must be less than 500 characters")
+      .required("Message is required"),
+    projectType: Yup.string(),
+  });
+
+  // Initial form values
+  const initialValues = {
     name: "",
     email: "",
     subject: "",
     message: "",
     projectType: "",
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast({
-      title: "Message Sent!",
-      description:
-        "Thanks for reaching out. I'll get back to you within 24 hours.",
-    });
-    setFormData({
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-      projectType: "",
-    });
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+  // Form submission handler
+  const handleSubmit = async (
+    values: typeof initialValues,
+    {
+      resetForm,
+      setSubmitting,
+    }: { resetForm: () => void; setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    try {
+      setIsSubmitting(true);
+
+      const response = await axios.post("/api/sendemail", values);
+
+      toast({
+        title: "Message Sent Successfully! ✨",
+        description:
+          "Thanks for reaching out. I'll get back to you within 24 hours.",
+      });
+      resetForm();
+    } catch (error) {
+      console.error("Error sending message:", error);
+      let errorMessage = "Something went wrong. Please try again later.";
+
+      if (axios.isAxiosError(error)) {
+        // Handle axios-specific errors
+        if (error.response?.data?.message) {
+          errorMessage = error.response.data.message;
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      toast({
+        title: "Failed to Send Message",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+      setSubmitting(false);
+    }
   };
 
   const contactInfo = [
@@ -173,30 +226,6 @@ const Contact = () => {
               </div>
             </Card>
 
-            {/* Quick Actions */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.6, duration: 0.6 }}
-            >
-              <Card className="glass p-6">
-                <h4 className="font-semibold mb-4 flex items-center gap-2">
-                  <Zap className="w-5 h-5 text-primary" />
-                  Quick Actions
-                </h4>
-                <div className="space-y-3">
-                  <Button variant="outline" className="w-full justify-start">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Schedule a Call
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    <Mail className="w-4 h-4 mr-2" />
-                    Send Email
-                  </Button>
-                </div>
-              </Card>
-            </motion.div>
-
             {/* Social Links */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -231,106 +260,167 @@ const Contact = () => {
             className="lg:col-span-2"
           >
             <Card className="glass p-8">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label htmlFor="name" className="text-sm font-medium">
-                      Your Name *
-                    </label>
-                    <Input
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      placeholder="John Doe"
-                      required
-                      className="glass"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium">
-                      Email Address *
-                    </label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      placeholder="john@example.com"
-                      required
-                      className="glass"
-                    />
-                  </div>
-                </div>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+              >
+                {({
+                  values,
+                  errors,
+                  touched,
+                  setFieldValue,
+                  isSubmitting: formikSubmitting,
+                }) => (
+                  <Form className="space-y-6">
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label htmlFor="name" className="text-sm font-medium">
+                          Your Name *
+                        </label>
+                        <Field
+                          as={Input}
+                          id="name"
+                          name="name"
+                          placeholder="John Doe"
+                          className={`glass ${
+                            errors.name && touched.name
+                              ? "border-destructive"
+                              : ""
+                          }`}
+                        />
+                        <ErrorMessage
+                          name="name"
+                          component="div"
+                          className="text-sm text-destructive"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label htmlFor="email" className="text-sm font-medium">
+                          Email Address *
+                        </label>
+                        <Field
+                          as={Input}
+                          id="email"
+                          name="email"
+                          type="email"
+                          placeholder="john@example.com"
+                          className={`glass ${
+                            errors.email && touched.email
+                              ? "border-destructive"
+                              : ""
+                          }`}
+                        />
+                        <ErrorMessage
+                          name="email"
+                          component="div"
+                          className="text-sm text-destructive"
+                        />
+                      </div>
+                    </div>
 
-                <div className="space-y-2">
-                  <label htmlFor="projectType" className="text-sm font-medium">
-                    Project Type
-                  </label>
-                  <select
-                    id="projectType"
-                    name="projectType"
-                    value={formData.projectType}
-                    onChange={handleInputChange}
-                    className="w-full h-11 px-3 py-2 rounded-lg border border-input bg-background/20 backdrop-blur-xl text-sm"
-                  >
-                    <option value="">Select project type</option>
-                    {projectTypes.map((type) => (
-                      <option key={type} value={type}>
-                        {type}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="projectType"
+                        className="text-sm font-medium"
+                      >
+                        Project Type
+                      </label>
+                      <Select
+                        value={values.projectType}
+                        onValueChange={(value) =>
+                          setFieldValue("projectType", value)
+                        }
+                      >
+                        <SelectTrigger className="glass">
+                          <SelectValue placeholder="Select Project Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            {projectTypes.map((project, index) => (
+                              <SelectItem key={index} value={project}>
+                                {project}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      <ErrorMessage
+                        name="projectType"
+                        component="div"
+                        className="text-sm text-destructive"
+                      />
+                    </div>
 
-                <div className="space-y-2">
-                  <label htmlFor="subject" className="text-sm font-medium">
-                    Subject *
-                  </label>
-                  <Input
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleInputChange}
-                    placeholder="Let's discuss your project"
-                    required
-                    className="glass"
-                  />
-                </div>
+                    <div className="space-y-2">
+                      <label htmlFor="subject" className="text-sm font-medium">
+                        Subject *
+                      </label>
+                      <Field
+                        as={Input}
+                        id="subject"
+                        name="subject"
+                        placeholder="Let's discuss your project"
+                        className={`glass ${
+                          errors.subject && touched.subject
+                            ? "border-destructive"
+                            : ""
+                        }`}
+                      />
+                      <ErrorMessage
+                        name="subject"
+                        component="div"
+                        className="text-sm text-destructive"
+                      />
+                    </div>
 
-                <div className="space-y-2">
-                  <label htmlFor="message" className="text-sm font-medium">
-                    Message *
-                  </label>
-                  <Textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    placeholder="Tell me about your project, timeline, and requirements..."
-                    rows={6}
-                    required
-                    className="glass resize-none"
-                  />
-                </div>
+                    <div className="space-y-2">
+                      <label htmlFor="message" className="text-sm font-medium">
+                        Message *
+                      </label>
+                      <Field
+                        as={Textarea}
+                        id="message"
+                        name="message"
+                        placeholder="Tell me about your project, timeline, and requirements..."
+                        rows={6}
+                        className={`glass resize-none ${
+                          errors.message && touched.message
+                            ? "border-destructive"
+                            : ""
+                        }`}
+                      />
+                      <ErrorMessage
+                        name="message"
+                        component="div"
+                        className="text-sm text-destructive"
+                      />
+                    </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                  <Button
-                    type="submit"
-                    variant="hero"
-                    size="lg"
-                    className="group flex-1"
-                  >
-                    <Send className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform" />
-                    Send Message
-                  </Button>
-                  <Button type="button" variant="neon" size="lg">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Schedule Call
-                  </Button>
-                </div>
-              </form>
+                    <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                      <Button
+                        type="submit"
+                        variant="hero"
+                        size="lg"
+                        className="group flex-1"
+                        disabled={isSubmitting || formikSubmitting}
+                      >
+                        {isSubmitting || formikSubmitting ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            <Send className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform" />
+                            Send Message
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </Form>
+                )}
+              </Formik>
 
               {/* Additional Info */}
               <div className="mt-8 pt-6 border-t border-border/50">

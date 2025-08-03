@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import Image from "next/image";
 import { Button } from "@/src/components/ui/button";
 import { Badge } from "@/src/components/ui/badge";
 import { Menu, X, Sun, Moon } from "lucide-react";
@@ -10,14 +12,16 @@ const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const navItems = [
-    { label: "Home", href: "#home" },
-    { label: "About", href: "#about" },
-    { label: "Skills", href: "#skills" },
-    { label: "Projects", href: "#projects" },
-    { label: "Experience", href: "#experience" },
-    { label: "Contact", href: "#contact" },
+    { label: "Home", href: "/#home" },
+    { label: "About", href: "/#about" },
+    { label: "Skills", href: "/#skills" },
+    { label: "Projects", href: "/#projects" },
+    { label: "Experience", href: "/#experience" },
+    { label: "Contact", href: "/#contact" },
   ];
 
   useEffect(() => {
@@ -47,9 +51,18 @@ const Navigation = () => {
   };
 
   const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
+    // Check if we're on the home page
+    const isHomePage = pathname === "/";
+    const sectionId = href.startsWith("/#") ? href.slice(2) : href.slice(1);
+    const element = document.querySelector(`#${sectionId}`);
+
+    if (element && isHomePage) {
+      // If element exists and we're on home page, scroll to it
       element.scrollIntoView({ behavior: "smooth" });
+    } else {
+      // If element doesn't exist or we're not on home page, navigate to home page with hash
+      const targetUrl = href.startsWith("/#") ? href : `/#${sectionId}`;
+      router.push(targetUrl);
     }
     setIsMobileMenuOpen(false);
   };
@@ -71,10 +84,17 @@ const Navigation = () => {
             {/* Logo */}
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-3"
+              className="flex items-center gap-3 cursor-pointer"
+              onClick={() => scrollToSection("/#home")}
             >
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-xl">MK</span>
+              <div className="w-10 h-10 rounded-lg overflow-hidden shadow-lg">
+                <Image
+                  src="/logo.jpg"
+                  alt="Muhammad Kashif Logo"
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="hidden sm:block">
                 <h1 className="font-bold text-lg">Muhammad Kashif</h1>

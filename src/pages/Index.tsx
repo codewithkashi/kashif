@@ -12,13 +12,34 @@ const Index = () => {
   useEffect(() => {
     // Set the page title
     document.title =
-      "Alex Chen - Full Stack Developer | Mobile Dev | DevOps Engineer";
+      "Muhammad Kashif - Full Stack Developer | Mobile Dev | DevOps Engineer";
 
     // Add smooth scrolling behavior
     document.documentElement.style.scrollBehavior = "smooth";
 
+    // Handle hash navigation on page load
+    const handleHashNavigation = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const element = document.querySelector(hash);
+        if (element) {
+          // Add a small delay to ensure the page is fully loaded
+          setTimeout(() => {
+            element.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+        }
+      }
+    };
+
+    // Handle initial hash
+    handleHashNavigation();
+
+    // Handle hash changes (when user navigates with hash)
+    window.addEventListener("hashchange", handleHashNavigation);
+
     return () => {
       document.documentElement.style.scrollBehavior = "auto";
+      window.removeEventListener("hashchange", handleHashNavigation);
     };
   }, []);
 

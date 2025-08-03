@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import { useRouter, usePathname } from "next/navigation";
+import Image from "next/image";
 import { Badge } from "@/src/components/ui/badge";
 import {
   Github,
@@ -10,6 +12,9 @@ import {
 } from "lucide-react";
 
 const Footer = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const socialLinks = [
     { icon: Github, href: "https://github.com/codewithkashi", label: "GitHub" },
     {
@@ -26,11 +31,11 @@ const Footer = () => {
   ];
 
   const quickLinks = [
-    { label: "About", href: "#about" },
-    { label: "Skills", href: "#skills" },
-    { label: "Projects", href: "#projects" },
-    { label: "Experience", href: "#experience" },
-    { label: "Contact", href: "#contact" },
+    { label: "About", href: "/#about" },
+    { label: "Skills", href: "/#skills" },
+    { label: "Projects", href: "/#projects" },
+    { label: "Experience", href: "/#experience" },
+    { label: "Contact", href: "/#contact" },
   ];
 
   return (
@@ -48,9 +53,18 @@ const Footer = () => {
             transition={{ duration: 0.6 }}
             className="lg:col-span-2"
           >
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-lg gradient-primary flex items-center justify-center">
-                <span className="text-white font-bold text-xl">MK</span>
+            <button
+              onClick={() => router.push("/")}
+              className="flex items-center gap-3 mb-6 cursor-pointer hover:opacity-80 transition-opacity text-left"
+            >
+              <div className="w-12 h-12 rounded-lg overflow-hidden shadow-lg">
+                <Image
+                  src="/logo.jpg"
+                  alt="Muhammad Kashif Logo"
+                  width={48}
+                  height={48}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
                 <h3 className="font-bold text-xl">Muhammad Kashif</h3>
@@ -58,7 +72,7 @@ const Footer = () => {
                   Full Stack Developer
                 </p>
               </div>
-            </div>
+            </button>
 
             <p className="text-muted-foreground mb-6 leading-relaxed">
               Passionate about creating innovative digital solutions that bridge
@@ -92,13 +106,27 @@ const Footer = () => {
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-2 group"
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      // Check if we're on the home page
+                      const isHomePage = pathname === "/";
+                      const sectionId = link.href.slice(2); // Remove /#
+                      const element = document.querySelector(`#${sectionId}`);
+
+                      if (element && isHomePage) {
+                        // If element exists and we're on home page, scroll to it
+                        element.scrollIntoView({ behavior: "smooth" });
+                      } else {
+                        // Navigate to home page with hash using router
+                        router.push(link.href);
+                      }
+                    }}
+                    className="text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-2 group text-left w-full"
                   >
                     <div className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                     {link.label}
-                  </a>
+                  </button>
                 </li>
               ))}
             </ul>

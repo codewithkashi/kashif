@@ -3,6 +3,7 @@ import { Button } from "@/src/components/ui/button";
 import { Badge } from "@/src/components/ui/badge";
 import { Download, Mail, Github, Linkedin } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const Hero = () => {
   const roles = ["Full Stack Developer", "Mobile Developer", "DevOps Engineer"];
@@ -117,14 +118,18 @@ const Hero = () => {
             transition={{ delay: 0.7, duration: 0.6 }}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8"
           >
-            <Button variant="hero" size="lg" className="group">
-              <Mail className="mr-2 group-hover:scale-110 transition-transform" />
-              Hire Me
-            </Button>
-            <Button variant="neon" size="lg" className="group">
-              <Download className="mr-2 group-hover:scale-110 transition-transform" />
-              Download Resume
-            </Button>
+            <Link href="#contact">
+              <Button variant="hero" size="lg" className="group">
+                <Mail className="mr-2 group-hover:scale-110 transition-transform" />
+                Hire Me
+              </Button>
+            </Link>
+            <Link href="/Kashif_Resume.pdf">
+              <Button variant="neon" size="lg" className="group">
+                <Download className="mr-2 group-hover:scale-110 transition-transform" />
+                Download Resume
+              </Button>
+            </Link>
           </motion.div>
 
           {/* Social links */}

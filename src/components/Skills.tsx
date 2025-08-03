@@ -103,6 +103,12 @@ const Skills = () => {
       color: "from-blue-600 to-indigo-600",
     },
     {
+      name: "MySQL",
+      category: "Database",
+      icon: "/icons/mysql.png",
+      color: "from-blue-600 to-indigo-600",
+    },
+    {
       name: "MongoDB",
       category: "Database",
       icon: "/icons/mongodb.png",
