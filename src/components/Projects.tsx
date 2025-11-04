@@ -15,26 +15,26 @@ const Projects = () => {
   });
 
   const projects = [
-    {
-      title: "Qi Tech - Incident Reporting Tool",
-      description:
-        "Professional incident reporting system currently used by over 700 pharmacies in the UK including Well Pharmacy. NHS certified and production-ready solution for healthcare incident management and compliance.",
-      image: "/projects/qitech.png",
-      type: "Full Stack Web",
-      icon: Globe,
-      technologies: ["PHP", "Laravel", "MySQL", "JavaScript", "Bootstrap"],
-      features: [
-        "NHS Certification",
-        "700+ Active Pharmacies",
-        "Incident Tracking",
-        "Compliance Reports",
-      ],
-      github: "#",
-      demo: "#",
-      role: "Lead Backend Developer",
-      duration: "1 year",
-      category: "web",
-    },
+    // {
+    //   title: "Qi Tech - Incident Reporting Tool",
+    //   description:
+    //     "Professional incident reporting system currently used by over 700 pharmacies in the UK including Well Pharmacy. NHS certified and production-ready solution for healthcare incident management and compliance.",
+    //   image: "/projects/qitech.png",
+    //   type: "Full Stack Web",
+    //   icon: Globe,
+    //   technologies: ["PHP", "Laravel", "MySQL", "JavaScript", "Bootstrap"],
+    //   features: [
+    //     "NHS Certification",
+    //     "700+ Active Pharmacies",
+    //     "Incident Tracking",
+    //     "Compliance Reports",
+    //   ],
+    //   github: "#",
+    //   demo: "#",
+    //   role: "Lead Backend Developer",
+    //   duration: "1 year",
+    //   category: "web",
+    // },
     {
       title: "Ferd AI - AI Design Generator",
       description:
