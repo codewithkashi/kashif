@@ -6,14 +6,9 @@ import {
   Mail,
   Phone,
   MapPin,
-  Send,
   Github,
   Linkedin,
-  Calendar,
-  MessageSquare,
-  Zap,
   Instagram,
-  Loader2,
   Globe,
 } from "lucide-react";
 const stats = [
@@ -86,6 +81,7 @@ const experiences = [
     title: "Full Stack Engineer",
     company: "Future Dev Solutions",
     type: "Full-time",
+    icon: "/fds.png",
     location: "Lahore, Pakistan",
     duration: "2023 - Present",
     description:
@@ -120,6 +116,7 @@ const experiences = [
     company: "Independent Contractor",
     type: "Freelance",
     location: "Remote",
+    icon: "/fiverr.png",
     duration: "2022 - 2023",
     description:
       "Delivered custom web applications for various clients including healthcare and educational sectors. Specialized in creating user-centric solutions with modern web technologies.",

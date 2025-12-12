@@ -1,25 +1,14 @@
 "use client";
 
-import React, { useState, lazy, Suspense } from "react";
+import React, { Suspense } from "react";
 import { motion } from "framer-motion";
-import {
-  ArrowRight,
-  Github,
-  Linkedin,
-  Mail,
-  FileText,
-  Send,
-  Instagram,
-} from "lucide-react";
+import { ArrowRight, FileText } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 
 // Import real data from constants
 import {
   stats,
-  techStack,
-  contactInfo,
-  socialLinks,
   experiences,
   projects,
   skillsData,
@@ -37,45 +26,28 @@ const InteractiveGrid = dynamic(
 
 // Magic UI Components
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
-import { TypingAnimation } from "@/components/ui/typing-animation";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
-import { Globe } from "@/components/ui/globe";
-import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
-import { AvatarCircles } from "@/components/ui/avatar-circles";
 import { BlurFade } from "@/components/ui/blur-fade";
-import { IconCloud } from "@/components/ui/icon-cloud";
 import { MagicCard } from "@/components/ui/magic-card";
-import { NumberTicker } from "@/components/ui/number-ticker";
-import { ShineBorder } from "@/components/ui/shine-border";
-import { AnimatedGradientText } from "@/components/ui/animated-gradient-text";
-import { BorderBeam } from "@/components/ui/border-beam";
 import { ScrollVelocityRow } from "@/components/ui/scroll-based-velocity";
-import { TweetCard } from "@/components/ui/tweet-card";
 import { AnimatedList } from "@/components/ui/animated-list";
-import { CodeComparison } from "@/components/ui/code-comparison";
 import { Meteors } from "@/components/ui/meteors";
-import { SparklesText } from "@/components/ui/sparkles-text";
-import { RainbowButton } from "@/components/ui/rainbow-button";
-import { Dock, DockIcon } from "@/components/ui/dock";
 import { Terminal } from "@/components/ui/terminal";
 import { SmoothCursor } from "@/components/ui/smooth-cursor";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { Particles } from "@/components/ui/particles";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Marquee } from "@/components/ui/marquee";
-import { Highlighter } from "@/components/ui/highlighter";
-import {
-  DraggableCardContainer,
-  DraggableCardBody,
-} from "@/components/ui/draggable-card";
+import { DraggableCardContainer } from "@/components/ui/draggable-card";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { ProjectCard } from "@/components/portfolio/project-card";
 import { OrbitingCircles } from "@/components/ui/orbiting-circles";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import { HyperText } from "@/components/ui/hyper-text";
+import {
+  VerticalTimeline,
+  VerticalTimelineElement,
+} from "react-vertical-timeline-component";
 
 export default function PortfolioPage() {
   return (
@@ -117,8 +89,8 @@ export default function PortfolioPage() {
             </Suspense>
           </div>
 
-          <div className="relative z-10 container mx-auto px-4 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[80vh]">
+          <div className="relative z-10 w-full px-4 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[80vh] max-w-[1600px] mx-auto">
               {/* Left Side - Information */}
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
@@ -427,21 +399,21 @@ export default function PortfolioPage() {
         {/* Skills & Tech Stack Section */}
         <section
           id="skills"
-          className="relative py-32 px-4 overflow-hidden bg-secondary/10"
+          className="relative min-h-screen flex items-center justify-center py-24 px-4 lg:px-8 overflow-hidden bg-secondary/10"
         >
           {/* Scroll-Based Velocity Text */}
           <div className="hidden lg:block">
             <ScrollVelocityRow
               baseVelocity={-0.5}
-              className="absolute top-0 left-0 right-0"
+              className="absolute top-0 left-0 right-0 mb-16"
             >
-              <div className="text-9xl font-bold opacity-5 whitespace-nowrap px-4">
+              <div className="text-9xl font-bold opacity-50 whitespace-nowrap px-4 pb-16">
                 TECH STACK . TECH STACK . TECH STACK .
               </div>
             </ScrollVelocityRow>
           </div>
 
-          <div className="container mx-auto relative z-10 max-w-7xl">
+          <div className="w-full relative z-10 px-4 lg:px-8 pt-16">
             <div className="text-center mb-16 block lg:hidden">
               <AnimatedShinyText className="text-4xl md:text-5xl font-bold text-center mb-16">
                 Tech Stack
@@ -449,7 +421,7 @@ export default function PortfolioPage() {
             </div>
 
             {/* Skills by Category - Bento Grid Style */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-[1600px] mx-auto">
               {categories.map((category: string, categoryIdx: number) => {
                 const categorySkills = skillsData.filter(
                   (skill: any) => skill.category === category
@@ -462,17 +434,17 @@ export default function PortfolioPage() {
                     delay={0.3 + categoryIdx * 0.1}
                     inView
                   >
-                    <MagicCard className="p-6 rounded-2xl h-full">
+                    <MagicCard className="p-8 rounded-2xl h-full">
                       {/* Category Title */}
-                      <div className="mb-5">
-                        <h3 className="text-lg font-semibold mb-2">
+                      <div className="mb-6">
+                        <h3 className="text-xl font-semibold mb-2">
                           {category}
                         </h3>
                         <div className="h-0.5 w-12 bg-primary rounded-full" />
                       </div>
 
                       {/* Skills Grid - More rows, fewer columns */}
-                      <div className="grid grid-cols-3 gap-3">
+                      <div className="grid grid-cols-3 gap-4">
                         {categorySkills.map((skill: any, idx: number) => (
                           <motion.div
                             key={idx}
@@ -482,20 +454,20 @@ export default function PortfolioPage() {
                             whileHover={{ scale: 1.08, y: -2 }}
                             className="group"
                           >
-                            <div className="bg-background/50 backdrop-blur-sm border border-border/50 rounded-xl p-2.5 flex flex-col items-center gap-1.5 hover:shadow-md hover:border-primary/50 hover:bg-background transition-all duration-300 cursor-pointer">
+                            <div className="bg-background/50 backdrop-blur-sm border border-border/50 rounded-xl p-3 flex flex-col items-center gap-2 hover:shadow-md hover:border-primary/50 hover:bg-background transition-all duration-300 cursor-pointer">
                               {/* Skill Icon */}
-                              <div className="w-10 h-10 relative flex items-center justify-center">
+                              <div className="w-12 h-12 relative flex items-center justify-center">
                                 <Image
                                   src={skill.icon}
                                   alt={skill.name}
-                                  width={40}
-                                  height={40}
+                                  width={48}
+                                  height={48}
                                   className="object-contain group-hover:scale-110 transition-transform duration-300"
                                 />
                               </div>
 
                               {/* Skill Name */}
-                              <span className="text-[10px] font-medium text-center text-muted-foreground group-hover:text-foreground transition-colors line-clamp-2 leading-tight">
+                              <span className="text-xs font-medium text-center text-muted-foreground group-hover:text-foreground transition-colors line-clamp-2 leading-tight">
                                 {skill.name}
                               </span>
                             </div>
@@ -511,26 +483,29 @@ export default function PortfolioPage() {
         </section>
 
         {/* Projects Section */}
-        <section id="projects" className="relative py-32 px-4 bg-secondary/20">
+        <section
+          id="projects"
+          className="relative min-h-screen flex items-center justify-center py-24 px-4 lg:px-8 bg-secondary/20"
+        >
           <div className="hidden lg:block">
             <ScrollVelocityRow
               baseVelocity={-0.5}
-              className="absolute top-0 left-0 right-0"
+              className="absolute top-0 left-0 right-0 mb-16"
             >
-              <div className="text-9xl font-bold opacity-5 whitespace-nowrap px-4">
+              <div className="text-9xl font-bold opacity-50 whitespace-nowrap px-4 pb-16">
                 FEATURED PROJECTS . FEATURED PROJECTS . FEATURED PROJECTS .
               </div>
             </ScrollVelocityRow>
           </div>
 
-          <div className="container mx-auto relative z-10">
+          <div className="w-full relative z-10 pt-16">
             <div className="text-center mb-16 block lg:hidden">
               <AnimatedShinyText className="text-4xl md:text-5xl font-bold text-center mb-16">
                 Featured Projects
               </AnimatedShinyText>
             </div>
 
-            <DraggableCardContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto mb-12">
+            <DraggableCardContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 max-w-[1600px] mx-auto px-4">
               {projects.slice(0, 6).map((project: any, idx: number) => (
                 <ProjectCard
                   key={idx}
@@ -557,11 +532,11 @@ export default function PortfolioPage() {
         {/* Experience & Education Section */}
         <section
           id="experience"
-          className="relative py-32 px-4 overflow-hidden"
+          className="relative min-h-screen flex items-center justify-center py-24 px-4 lg:px-8 overflow-hidden"
         >
           <Meteors number={20} />
 
-          <div className="container mx-auto relative z-10">
+          <div className="w-full relative z-10">
             <BlurFade delay={0.2} inView>
               <div className="text-center mb-16">
                 <AnimatedShinyText className="text-4xl md:text-5xl font-bold text-center mb-16">
@@ -570,20 +545,54 @@ export default function PortfolioPage() {
               </div>
             </BlurFade>
 
-            <div className="max-w-4xl mx-auto space-y-8">
-              <AnimatedList>
-                {experiences.map((exp: any, idx: number) => (
-                  <ExperienceItem
-                    key={idx}
-                    title={exp.title}
-                    company={exp.company}
-                    period={exp.duration}
-                    description={exp.description}
-                    achievements={exp.achievements}
-                    technologies={exp.technologies}
-                  />
+            <div className="max-w-[1600px] mx-auto space-y-8">
+              <VerticalTimeline>
+                {experiences.map((exp: any, index: number) => (
+                  <VerticalTimelineElement
+                    className="vertical-timeline-element--work"
+                    position={index % 2 === 0 ? "left" : "right"}
+                    contentStyle={{
+                      background: "var(--card)",
+                      color: "var(--card-foreground)",
+                      border: "2px solid var(--primary)",
+                      borderRadius: "12px",
+                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                    }}
+                    contentArrowStyle={{
+                      borderRight: "7px solid var(--primary)",
+                    }}
+                    iconStyle={{
+                      background: "var(--primary)",
+                      color: "#fff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "40px",
+                      height: "40px",
+                      left: "calc(50% + 18px)",
+                    }}
+                    icon={
+                      <Image
+                        src={exp.icon}
+                        alt={exp.title}
+                        width={40}
+                        height={40}
+                        className="object-contain rounded-full"
+                      />
+                    }
+                  >
+                    <ExperienceItem
+                      key={index}
+                      title={exp.title}
+                      company={exp.company}
+                      period={exp.duration}
+                      description={exp.description}
+                      achievements={exp.achievements}
+                      technologies={exp.technologies}
+                    />
+                  </VerticalTimelineElement>
                 ))}
-              </AnimatedList>
+              </VerticalTimeline>
             </div>
           </div>
         </section>
@@ -617,7 +626,7 @@ function ExperienceItem({
 
   return (
     <motion.div
-      className="bg-card border border-border rounded-lg p-6 cursor-pointer"
+      className="bg-card border border-border rounded-lg p-6 cursor-pointer "
       onClick={() => setExpanded(!expanded)}
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.2 }}

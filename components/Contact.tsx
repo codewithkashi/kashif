@@ -1,13 +1,12 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-const { Formik, Form, Field, ErrorMessage } = require("formik");
 import * as Yup from "yup";
 import axios from "axios";
 import confetti from "canvas-confetti";
@@ -18,9 +17,6 @@ import {
   Send,
   Github,
   Linkedin,
-  Calendar,
-  MessageSquare,
-  Zap,
   Instagram,
   Loader2,
 } from "lucide-react";
@@ -33,6 +29,8 @@ import {
   SelectValue,
 } from "./ui/select";
 import { AnimatedShinyText } from "./ui/animated-shiny-text";
+import { Globe } from "@/components/ui/globe";
+const { Formik, Form, Field, ErrorMessage } = require("formik");
 
 const Contact = () => {
   const [ref, inView] = useInView({
@@ -210,11 +208,14 @@ const Contact = () => {
   ];
 
   return (
-    <section id="contact" className="py-24 px-6 relative overflow-hidden">
+    <section
+      id="contact"
+      className="relative min-h-screen flex items-center justify-center py-24 px-4 lg:px-8 overflow-hidden"
+    >
       {/* Background elements */}
       <div className="absolute inset-0 tech-grid opacity-10" />
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="w-full relative z-10">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 30 }}
@@ -227,76 +228,12 @@ const Contact = () => {
           </AnimatedShinyText>
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-12">
-          {/* Contact Information */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 max-w-[1600px] mx-auto">
+          {/* Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="space-y-8"
-          >
-            <Card className="glass p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <MessageSquare className="w-6 h-6 text-primary" />
-                <h3 className="text-xl font-semibold">Get in Touch</h3>
-              </div>
-
-              <div className="space-y-6">
-                {contactInfo.map((info, index) => (
-                  <motion.a
-                    key={info.label}
-                    href={info.href}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={inView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ delay: 0.4 + index * 0.1, duration: 0.6 }}
-                    className="flex items-center gap-4 p-3 rounded-lg hover:bg-background/20 transition-colors group"
-                  >
-                    <div className="p-2 rounded-lg bg-primary/20 group-hover:bg-primary/30 transition-colors">
-                      <info.icon className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">
-                        {info.label}
-                      </p>
-                      <p className="font-medium">{info.value}</p>
-                    </div>
-                  </motion.a>
-                ))}
-              </div>
-            </Card>
-
-            {/* Social Links */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.8, duration: 0.6 }}
-            >
-              <Card className="glass p-6">
-                <h4 className="font-semibold mb-4">Connect With Me</h4>
-                <div className="flex gap-4">
-                  {socialLinks.map((social) => (
-                    <motion.a
-                      key={social.label}
-                      href={social.href}
-                      whileHover={{ scale: 1.1, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`p-3 rounded-lg glass hover:bg-accent hover:text-accent-foreground transition-all duration-300 ${social.color}`}
-                      aria-label={social.label}
-                    >
-                      <social.icon className="w-5 h-5" />
-                    </motion.a>
-                  ))}
-                </div>
-              </Card>
-            </motion.div>
-          </motion.div>
-
-          {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="lg:col-span-2"
           >
             <Card className="glass p-8">
               <Formik
@@ -482,6 +419,16 @@ const Contact = () => {
                 </p>
               </div>
             </Card>
+          </motion.div>
+
+          {/* Globe Component */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="relative h-full min-h-[500px] flex items-center justify-center"
+          >
+            <Globe />
           </motion.div>
         </div>
       </div>

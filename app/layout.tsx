@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
+import "react-vertical-timeline-component/style.min.css";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -67,6 +69,7 @@ export default function RootLayout({
         >
           <Navigation />
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

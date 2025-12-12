@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import { Dock, DockIcon } from "@/components/ui/dock";
 import {
   Github,
   Linkedin,
@@ -38,12 +39,12 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="relative py-16 px-6 mt-24 overflow-hidden">
+    <footer className="relative py-16 px-4 lg:px-8 mt-24 overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0 tech-grid opacity-5" />
       <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="w-full max-w-[1600px] mx-auto relative z-10">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Brand Section */}
           <motion.div
@@ -79,20 +80,26 @@ const Footer = () => {
               Let's build the future together.
             </p>
 
-            <div className="flex gap-4">
+            <Dock
+              direction="middle"
+              iconSize={40}
+              iconMagnification={60}
+              className="mt-0 mx-0"
+            >
               {socialLinks.map((social) => (
-                <motion.a
-                  key={social.label}
-                  href={social.href}
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="p-3 rounded-lg glass hover:bg-accent hover:text-accent-foreground transition-all duration-300"
-                  aria-label={social.label}
-                >
-                  <social.icon className="w-5 h-5" />
-                </motion.a>
+                <DockIcon key={social.label}>
+                  <a
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
+                    className="flex items-center justify-center w-full h-full"
+                  >
+                    <social.icon className="w-5 h-5" />
+                  </a>
+                </DockIcon>
               ))}
-            </div>
+            </Dock>
           </motion.div>
 
           {/* Quick Links */}
